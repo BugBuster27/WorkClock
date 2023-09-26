@@ -7,8 +7,10 @@ pygame.init()
 window_size = (200, 200)
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption("Clock")
+font = pygame.font.Font(None, 24)
+menu_items = ["File"]
 
-target_time = "17:30:00"
+target_time = "18:00:00"
 
 running = True
 clock = pygame.time.Clock()
@@ -19,7 +21,6 @@ def draw_hand(color, angle, length):
     y = window_size[1] // 2 + 15 + length * math.sin(angle_rad)
     pygame.draw.line(screen, color, (window_size[0] // 2, window_size[1] // 2 + 15), (x, y), 2)
 
-font = pygame.font.Font(None, 24)
 
 while running:
     for event in pygame.event.get():
@@ -62,6 +63,15 @@ while running:
     text = font.render(time_difference, True, (255, 0, 0))
     text_rect = text.get_rect(center=((window_size[0] // 2) + 50, 20))
     screen.blit(text, text_rect)
+    
+    # area
+    # left, top, width, height
+    # 115, 10, 75, 18
+    
+    if 115 < pygame.mouse.get_pos()[0] < 190:
+        if 10 < pygame.mouse.get_pos()[1] < 28:
+            if pygame.mouse.get_pressed()[0] == True:
+                print("true")
 
     pygame.display.flip()
     clock.tick(10)

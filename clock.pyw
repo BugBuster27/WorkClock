@@ -3,6 +3,7 @@ import pygame
 import sys
 import math
 import re
+import random
 
 pygame.init()
 window_size = (200, 200)
@@ -13,6 +14,10 @@ show_menu = False
 input_active = False
 input_text_var = ""
 error_text_var = ""
+clock_color = (255, 255, 255)
+
+img_icon = pygame.image.load("./icon.png")
+pygame.display.set_icon(img_icon)
 
 target_time = "18:10:00"
 
@@ -52,6 +57,9 @@ while running:
     seconds, minutes, hours = current_time.tm_sec, current_time.tm_min, current_time.tm_hour % 12
 
     if show_menu == False:
+        
+        # Clock face
+        pygame.draw.circle(screen, clock_color, (window_size[0] // 2, window_size[1] // 2 + 15), (window_size[1] // 2) - 20, 0)
         
         # Clock outline
         pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), (window_size[1] // 2) - 20, 1)
@@ -99,6 +107,15 @@ while running:
                 if pygame.mouse.get_pressed()[0] == True:
                     show_menu = True
                     input_text_var = target_time
+        
+        
+        circle_center = (window_size[0] // 2, window_size[1] // 2 + 15)
+        circle_radius = (window_size[1] // 2) - 20
+        distance_to_center = math.sqrt((pygame.mouse.get_pos()[0] - circle_center[0]) ** 2 + (pygame.mouse.get_pos()[1] - circle_center[1]) ** 2)
+        if distance_to_center < circle_radius and pygame.mouse.get_pressed()[0]:
+            clock_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        else:
+            clock_color = (255, 255, 255)
     
     if show_menu == True:
         

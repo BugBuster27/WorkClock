@@ -15,6 +15,8 @@ input_active = False
 input_text_var = ""
 error_text_var = ""
 clock_color = (255, 255, 255)
+old_mouse_x = 0
+old_mouse_y = 0
 
 img_icon = pygame.image.load("./icon.png")
 pygame.display.set_icon(img_icon)
@@ -110,7 +112,10 @@ while running:
         circle_radius = (window_size[1] // 2) - 20
         distance_to_center = math.sqrt((pygame.mouse.get_pos()[0] - circle_center[0]) ** 2 + (pygame.mouse.get_pos()[1] - circle_center[1]) ** 2)
         if distance_to_center < circle_radius and pygame.mouse.get_pressed()[0]:
-            clock_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            if pygame.mouse.get_pos()[0] != old_mouse_x or pygame.mouse.get_pos()[1] != old_mouse_y:
+                clock_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                old_mouse_x = pygame.mouse.get_pos()[0]
+                old_mouse_y = pygame.mouse.get_pos()[1]
         else:
             clock_color = (255, 255, 255)
         

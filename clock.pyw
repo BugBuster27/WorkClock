@@ -63,9 +63,6 @@ while running:
         
         # Clock outline
         pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), (window_size[1] // 2) - 20, 1)
-        
-        # Clock centre dot
-        pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), 2)
 
         # Clock hands
         draw_hand((255, 0, 0), (seconds - 15) * 6, window_size[1] // 2 - 30)
@@ -116,6 +113,10 @@ while running:
             clock_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         else:
             clock_color = (255, 255, 255)
+        
+        
+        # Clock centre dot
+        pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), 2)
     
     if show_menu == True:
         

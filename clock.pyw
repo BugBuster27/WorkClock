@@ -122,6 +122,8 @@ while running:
         
         # Clock centre dot
         pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), 2)
+        
+        pygame.draw.rect(screen, (255, 128, 0), (0, 180, 30, 20))
     
     if show_menu == True:
         

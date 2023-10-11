@@ -12,16 +12,30 @@ pygame.display.set_caption("Clock")
 font = pygame.font.Font(None, 24)
 show_menu = False
 input_active = False
+weird_stuff = False
 input_text_var = ""
 error_text_var = ""
 clock_color = (255, 255, 255)
 old_mouse_x = 0
 old_mouse_y = 0
+debouncer = 0
+current_tick = 0
+slow_down = False
+clock0 = 0
+clock1 = 0
+clock2 = 0
+clock01 = 0
+clock11 = 0
+clock21 = 0
+move0 = False
+move1 = False
+move2 = False
+spinning = False
 
 img_icon = pygame.image.load("./icon.png")
 pygame.display.set_icon(img_icon)
 
-target_time = "18:10:00"
+target_time = "18:00:00"
 
 running = True
 clock = pygame.time.Clock()
@@ -59,6 +73,32 @@ while running:
     seconds, minutes, hours = current_time.tm_sec, current_time.tm_min, current_time.tm_hour % 12
 
     if show_menu == False:
+
+        pygame.draw.rect(screen, (255, 130, 0), (0, 180, 30, 20))
+        
+        if 0 < pygame.mouse.get_pos()[0] < 30:
+            if 180 < pygame.mouse.get_pos()[1] < 200:
+                if pygame.mouse.get_pressed()[0] == True:
+                    if debouncer == 0:
+                        if not spinning:
+                            spinning = True
+                            debouncer = 1
+                            if weird_stuff:
+                                weird_stuff = False
+                                move0 = False
+                                move1 = False
+                                move2 = False
+                                slow_down = True
+                            else:
+                                weird_stuff = True
+                                clock01 = 0
+                                clock11 = 0
+                                clock21 = 0
+                                clock0 = (seconds - 15) * 6
+                                clock1 = (minutes - 15) * 6
+                                clock2 = (hours - 3) * 30
+                elif pygame.mouse.get_pressed()[0] == False:
+                    debouncer = 0
         
         # Clock face
         pygame.draw.circle(screen, clock_color, (window_size[0] // 2, window_size[1] // 2 + 15), (window_size[1] // 2) - 20, 0)
@@ -67,9 +107,57 @@ while running:
         pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), (window_size[1] // 2) - 20, 1)
 
         # Clock hands
-        draw_hand((255, 0, 0), (seconds - 15) * 6, window_size[1] // 2 - 30)
-        draw_hand((0, 255, 0), (minutes - 15) * 6, window_size[1] // 2 - 40)
-        draw_hand((0, 0, 255), (hours - 3) * 30, window_size[1] // 2 - 60)
+        if weird_stuff:
+            current_tick = current_tick + 1
+
+            if current_tick == 30:
+                move0 = True
+            if current_tick == 60:
+                move1 = True
+            if current_tick == 90:
+                move2 = True
+            if current_tick == 120:
+                spinning = False
+
+            draw_hand((random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), clock0, window_size[1] // 2 - 30)
+            draw_hand((random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), clock1, window_size[1] // 2 - 40)
+            draw_hand((random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), clock2, window_size[1] // 2 - 60)
+
+            clock0 = clock0 + clock01
+            clock1 = clock1 + clock11
+            clock2 = clock2 + clock21
+
+            if move0:
+                clock01 = clock01 + 0.3
+            if move1:
+                clock11 = clock11 + 0.2
+            if move2:
+                clock21 = clock21 + 0.1
+        else:
+            if slow_down:
+                if clock0 > (seconds - 15) * 6:
+                    clock0 = clock0 - clock01
+                    if clock01 > 1:
+                        clock01 = clock01 - 0.3
+                if clock1 > (minutes - 15) * 6:
+                    clock1 = clock1 - clock11
+                    if clock11 > 1:
+                        clock11 = clock11 - 0.2
+                if clock2 > (hours - 3) * 30:
+                    clock2 = clock2 - clock21
+                    if clock21 > 1:
+                        clock21 = clock21 - 0.1
+                if clock0 <= (seconds - 15) * 6 and clock1 <= (minutes - 15) * 6 and clock2 <= (hours - 3) * 30:
+                    slow_down = False
+                    current_tick = 0
+                    spinning = False
+            else:
+                clock0 = (seconds - 15) * 6
+                clock1 = (minutes - 15) * 6
+                clock2 = (hours - 3) * 30
+            draw_hand((255, 0, 0), clock0, window_size[1] // 2 - 30)
+            draw_hand((0, 255, 0), clock1, window_size[1] // 2 - 40)
+            draw_hand((0, 0, 255), clock2, window_size[1] // 2 - 60)
 
         digital_time = time.strftime("%H:%M:%S")
         text = font.render(digital_time, True, (255, 0, 0))
@@ -122,8 +210,6 @@ while running:
         
         # Clock centre dot
         pygame.draw.circle(screen, (0, 0, 0), (window_size[0] // 2, window_size[1] // 2 + 15), 2)
-        
-        pygame.draw.rect(screen, (255, 130, 0), (0, 180, 30, 20))
     
     if show_menu == True:
         

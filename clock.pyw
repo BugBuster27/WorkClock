@@ -4,10 +4,16 @@ import sys
 import math
 import re
 import random
+import win32gui
+import win32con
 
 pygame.init()
 window_size = (200, 200)
 screen = pygame.display.set_mode(window_size)
+
+hwnd = win32gui.GetForegroundWindow()
+win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 600, 300, 0, 0, win32con.SWP_NOSIZE)
+
 pygame.display.set_caption("Clock")
 font = pygame.font.Font(None, 24)
 show_menu = False
